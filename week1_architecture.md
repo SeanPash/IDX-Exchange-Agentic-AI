@@ -2,141 +2,149 @@
 
 ## Overview
 
-OpenClaw is a multi-agent orchestration runtime that handles communication channels, skill routing, session state, memory, and tool execution.
-
-For the IDX Exchange system, a user sends a request through WhatsApp. OpenClaw determines which skill should handle the request, executes the appropriate database tool, updates the user's session or memory, and returns a formatted response.
+OpenClaw receives a user request, routes it to the right skill or agent, uses tools when needed, and sends the result back to the user.
 
 ## System Architecture
 
 ```mermaid
-flowchart TD
-    A[User] --> B[WhatsApp Channel]
+flowchart LR
+    A[User] --> B[WhatsApp]
     B --> C[OpenClaw Runtime]
-    C --> D[Orchestrator / Skill Selector]
+    C --> D[Orchestrator]
 
     D --> E[Property Search Skill]
     D --> F[Market Analytics Skill]
 
     E --> G[Database Tool]
-    F --> H[Database Tool]
+    G --> H[(rets_property)]
 
-    G --> I[(rets_property)]
-    H --> J[(california_sold)]
+    F --> I[Database Tool]
+    I --> J[(california_sold)]
 
-    I --> K[Results]
+    H --> K[Results]
     J --> K
 
-    K --> L[Session / Memory Update]
-    L --> M[Formatted Response]
+    K --> L[Session / Memory]
+    L --> M[Response]
     M --> B
-    B --> A
 ```
 
-## Components
+## Main Components
 
 ### Channel
 
-The interface used to communicate with OpenClaw.
+The channel is how the user communicates with OpenClaw.
 
-Example:
-- WhatsApp
+For this project, the main channel is WhatsApp.
 
 ### Runtime
 
-The main OpenClaw environment that manages incoming requests, skill execution, sessions, tools, and responses.
+The OpenClaw runtime handles the request while it moves through the system.
+
+It connects things like channels, skills, tools, sessions, and memory.
 
 ### Orchestrator
 
-Determines which skill or agent should handle a user's request.
+The orchestrator decides where a request should go.
 
-For example, a property search request can be routed to the Property Search Skill, while a question about housing prices can be routed to the Market Analytics Skill.
+For example:
+
+- A home search goes to the Property Search skill.
+- A question about price trends goes to the Market Analytics skill.
 
 ### Skill
 
-A modular capability that handles a specific type of request.
+A skill handles a certain type of task.
 
-Examples:
+Examples for this project:
+
 - Property Search
 - Market Analytics
 - RAG
 
 ### Tool
 
-A function that a skill or agent can call to perform an action.
+A tool performs an action for a skill.
 
-Example:
-- Query the MySQL database
+For example, a database tool can query MySQL and return property data.
 
 ### Session
 
-Stores the state and conversation context for an individual user.
+A session keeps track of the current user's conversation and state.
 
 ### Memory
 
-Stores information that may be needed during or across conversations, including short-term session state and long-term information.
+Memory stores information that OpenClaw may need while handling conversations.
 
-## Database Flow
+This can include short-term session information and longer-term stored information.
+
+## Example Flows
 
 ### Property Search
 
-Example user request:
+Example:
 
-> "Find me a 3 bedroom condo in Irvine."
+> Find me a 3 bedroom condo in Irvine.
 
-The request follows this path:
+Flow:
 
 ```text
 User
-  ↓
+ ↓
 WhatsApp
-  ↓
-OpenClaw Runtime
-  ↓
-Orchestrator
-  ↓
+ ↓
+OpenClaw
+ ↓
 Property Search Skill
-  ↓
+ ↓
 Database Tool
-  ↓
+ ↓
 rets_property
-  ↓
+ ↓
 Results
-  ↓
-Response to User
+ ↓
+Response
 ```
 
-The `rets_property` database contains property listing information used for property search queries.
+`rets_property` is used for active property/listing information.
 
-### Market Analytics
+### Market Question
 
-Example user request:
+Example:
 
-> "Are prices increasing in San Diego?"
+> Are prices increasing in San Diego?
 
-The request follows this path:
+Flow:
 
 ```text
 User
-  ↓
+ ↓
 WhatsApp
-  ↓
-OpenClaw Runtime
-  ↓
-Orchestrator
-  ↓
+ ↓
+OpenClaw
+ ↓
 Market Analytics Skill
-  ↓
+ ↓
 Database Tool
-  ↓
+ ↓
 california_sold
-  ↓
+ ↓
 Results
-  ↓
-Response to User
+ ↓
+Response
 ```
 
-The `california_sold` database contains sold-property data that can be used for market statistics and trend analysis.
+`california_sold` is used for sold-property data and market analysis.
 
-## Summary
+## OpenClaw Repo
 
-OpenClaw acts as the layer between the user and the underlying tools and databases. The orchestrator determines which skill should handle the request, the skill uses the appropriate tool to retrieve data, and OpenClaw returns the result to the user through WhatsApp.
+While looking through the OpenClaw source code, some of the main folders that relate to this architecture are:
+
+- `src/agents`
+- `src/channels`
+- `src/memory`
+- `src/plugins`
+
+There are also runtime and configuration files that connect these parts of the system.
+
+The basic idea is that OpenClaw sits between the user's message and the tools/data needed to answer it.
