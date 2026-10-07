@@ -1,0 +1,27 @@
+{
+  "name": "idx-exchange-agentic-ai",
+  "version": "1.0.0",
+  "description": "IDX Exchange Agentic AI Internship Project",
+  "main": "index.js",
+  "scripts": {
+    "test": "vitest run"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SeanPash/IDX-Exchange-Agentic-AI.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/SeanPash/IDX-Exchange-Agentic-AI/issues"
+  },
+  "homepage": "https://github.com/SeanPash/IDX-Exchange-Agentic-AI#readme",
+  "devDependencies": {
+    "@types/node": "^26.6.4",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2",
+    "vitest": "^5.0.3"
+  }
+}
