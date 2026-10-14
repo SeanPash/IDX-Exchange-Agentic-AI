@@ -1,6 +1,6 @@
 ---
 name: property-search
-description: Convert natural-language real estate searches into structured MLS property filters.
+description: Parse real estate searches, query active MLS listings, and retrieve sold comps.
 ---
 
 # Property Search
@@ -20,3 +20,23 @@ dollar amounts and other shell characters remain literal.
 Return the resulting structured JSON filter object. It contains `city`,
 `maxPrice`, `beds`, `baths`, `sqft`, `type`, `pool`, and `hasView`.
 Unspecified filters are `null`; pool and view matches are `"True"`.
+
+To search active listings and return readable property cards:
+
+```bash
+npx tsx {baseDir}/scripts/search-properties.ts active "<user property query>" [page] [limit]
+```
+
+Page defaults to 1 and limit to 10 (maximum 50). The existing parser supplies
+the filters, including `maxHoa` when specified.
+
+To retrieve sold comps directly as JSON:
+
+```bash
+npx tsx {baseDir}/scripts/search-properties.ts sold "<city>" [months]
+```
+
+Months defaults to 12. Returns at most 50 residential transactions, newest first.
+Database commands require `MYSQL_HOST`, `MYSQL_USER`, `MYSQL_PASSWORD`, and
+`MYSQL_DATABASE` in the environment or the `.env` file in the working directory.
+Run from the project root to use its `.env` file. Return command output to the user.
