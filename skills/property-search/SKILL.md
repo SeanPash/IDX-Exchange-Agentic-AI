@@ -14,10 +14,30 @@ copied OpenClaw workspace `search-properties.ts`. The installed OpenClaw workspa
 copy does not contain the project's `src` directory.
 
 When the user asks for homes, listings, active properties, properties for sale,
-or MLS results, use the active Week 3 database command below. When the user asks
+or MLS results conversationally, use the Week 4 command below. When the user asks
 for sold comps, recent sales, or sold properties, use the sold Week 3 database
 command below. Do NOT fall back to `parse-property-query.ts` for those requests.
 Return the actual command output to the user.
+
+For conversational active searches and follow-up preferences, execute from the
+actual IDX repo:
+
+```bash
+cd "/mnt/c/Documents and Settings/seanp/Documents/GitHub/IDX-Exchange-Agentic-AI" && \
+npx tsx skills/property-search/scripts/converse-properties.ts "<channel/session/user ID>" "<first search message>" "<next preference message>"
+```
+
+Use the current channel's stable session/user ID, never one shared across users.
+Each invocation starts a fresh process: pass this user's property-search messages
+in order from the current conversation, including the latest message, as separate
+shell-escaped arguments. Do not include other users' messages or assistant replies.
+Return only the command's latest response. Follow-up questions include examples
+of the existing parser's supported wording. A message of `reset`, `clear`, or
+`start over` clears the search; discard earlier search history after that reset.
+The handler uses an in-memory Map within each process; replay reconstructs its
+filters across OpenClaw commands. This uses the existing channel history, without
+adding WhatsApp transport or persistent storage. For explicit single-turn searches
+or pagination, keep using the Week 3 active command below.
 
 Use the Week 2 parser only when the user explicitly requests structured filters
 rather than database results. For those parser/filter requests, run:

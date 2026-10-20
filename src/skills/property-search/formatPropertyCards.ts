@@ -9,6 +9,7 @@ export function formatPropertyCards(listings: ListingRow[]): string {
       `Price: ${listing.price == null ? "Unavailable" : "$" + Number(listing.price).toLocaleString("en-US")}`,
       `${listing.beds ?? "?"} beds | ${listing.baths ?? "?"} baths | ${listing.sqft ?? "?"} sq ft`,
       `Type: ${listing.type ?? "Unavailable"}`,
+      `Photos: ${listing.PhotoCount ?? "Unavailable"}`,
     ];
     if (listing.AssociationFee != null) lines.push(`HOA: $${Number(listing.AssociationFee).toLocaleString("en-US")}`);
     if (listing.DaysOnMarket != null) lines.push(`Days on market: ${listing.DaysOnMarket}`);
