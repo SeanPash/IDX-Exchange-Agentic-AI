@@ -17,11 +17,11 @@ export async function handlePropertySearch(userId: string, message: string, sear
     lastResults: undefined,
   });
 
-  if (!session.city) return "Which city would you like to search in? (For example: in Irvine)";
-  if (session.maxPrice === null) return "What is your budget? (For example: under $1.2M)";
+  if (!session.city) return "Which city would you like to search in?";
+  if (session.maxPrice === null) return "What is your budget?";
   const { city, maxPrice, lastResults, conversationStep, ...preferences } = session;
   if (Object.values(preferences).every((value) => value === null)) {
-    return "What property type or minimum number of bedrooms would you like? (For example: single family with at least 3 beds)";
+    return "What property type or minimum number of bedrooms would you like?";
   }
 
   const listings = await search({ city, maxPrice, ...preferences });

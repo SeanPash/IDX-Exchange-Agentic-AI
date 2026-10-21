@@ -26,9 +26,9 @@ describe("conversational property search", () => {
       L_Address: "123 Test St", L_City: "Irvine", price: 1100000,
       beds: 3, baths: 2, PhotoCount: 12,
     }]);
-    expect(await handlePropertySearch("alice", "Find homes in Irvine")).toContain("budget");
+    expect(await handlePropertySearch("alice", "Find homes in Irvine")).toBe("What is your budget?");
     expect(getSession("alice").city).toBe("Irvine");
-    expect(await handlePropertySearch("alice", "Under $1.2M")).toContain("bedrooms");
+    expect(await handlePropertySearch("alice", "Under $1.2M")).toBe("What property type or minimum number of bedrooms would you like?");
     expect(getSession("alice")).toMatchObject({ city: "Irvine", maxPrice: 1200000 });
     expect(query).not.toHaveBeenCalled();
     const response = await handlePropertySearch("alice", "single family with at least 3 beds", searchActiveListings);
@@ -56,7 +56,7 @@ describe("conversational property search", () => {
   });
 
   it("asks for city and preserves all supported filters during refinement", async () => {
-    expect(await handlePropertySearch("alice", "under $2M")).toContain("city");
+    expect(await handlePropertySearch("alice", "under $2M")).toBe("Which city would you like to search in?");
     vi.mocked(query).mockResolvedValue([]);
     await handlePropertySearch("alice", "in Irvine with 2 baths 1800 sqft pool view HOA under $500");
     await handlePropertySearch("alice", "under $1.5M");
