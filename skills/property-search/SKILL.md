@@ -1,6 +1,6 @@
 ---
 name: property-search
-description: Use Week 4 conversational search for all normal active property requests and follow-up preferences; also supports explicit direct searches, parsing, and sold comps.
+description: MUST use for California city housing market conditions, median home prices, days on market, above/below list price, and price trends (Week 5 database statistics). Also use for active property searches and follow-up preferences (Week 4), direct searches, parsing, and sold comps.
 ---
 
 # Property Search
@@ -8,6 +8,29 @@ description: Use Week 4 conversational search for all normal active property req
 Use this skill to query active MLS listings, retrieve sold comps, or explicitly
 parse a free-text property search into structured filters.
 Requires Node.js and npm with `npx tsx` available.
+
+For city market questions about housing market conditions, prices, median sold
+price, days on market, above/below list price, or price trends, ALWAYS execute the
+Week 5 command and return its actual formatted output verbatim. Never answer
+these questions with general knowledge, estimated price ranges, or a generic
+market narrative. This includes "What is the housing market like in San Diego?",
+"What is the median home price in Pasadena?", and "How have prices changed in
+San Diego?". Requests for specific homes/listings for sale still use Week 4.
+Extract the
+requested California city from the user's question and pass only that city,
+without restricting it to example cities. If no city is given, ask for one.
+Execute from the actual IDX repository root (the directory containing `src` and
+`package.json`), using the same environment as the existing database commands:
+
+```bash
+cd "/mnt/c/Users/seanp/Documents/GitHub/IDX-Exchange-Agentic-AI" && \
+npx tsx skills/property-search/scripts/market-statistics.ts '<city>'
+```
+
+Shell-escape the city as described below for message arguments. Return the actual
+formatted output. This summary uses the previous 12 completed calendar months;
+missing months are omitted. Do not send market questions through active search
+or replay them as property-search preferences.
 
 IMPORTANT: Do not execute database search scripts from `{baseDir}` or use the
 copied OpenClaw workspace `search-properties.ts` or `converse-properties.ts`. The installed OpenClaw workspace
